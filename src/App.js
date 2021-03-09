@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import { DruxtClient } from 'druxt';
+import { Component } from 'react';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const druxt = new DruxtClient('https://demo-api.druxtjs.org')
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = { entity: [] };
+  }
+
+  async componentDidMount() {
+    const entity = [(await druxt.getResource('node--page', 'f09d8d5f-4998-4811-8fd1-05647f1c85d9')).data]
+    this.setState({ entity })
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          Druxt example:<br />
+          {this.state.entity.map(e => JSON.stringify(e.attributes))}
+        </header>
+      </div>
+    );
+  }
 }
 
 export default App;
